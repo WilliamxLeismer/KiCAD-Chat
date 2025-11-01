@@ -149,7 +149,7 @@ def secure_chat_session(schematic_path: Path):
     console.print()
     
     # Demo: Show PII sanitization
-    if hasattr(secure_provider.encryption_manager, 'sanitize_for_ai'):
+    if secure_provider.encryption_manager is not None and hasattr(secure_provider.encryption_manager, 'sanitize_for_ai'):
         console.print("[bold blue]Example:[/bold blue] PII Sanitization")
         test_comment = "Designer: john.doe@company.com, Phone: 555-1234"
         sanitized = secure_provider.encryption_manager.sanitize_for_ai(test_comment)

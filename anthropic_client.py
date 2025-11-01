@@ -182,14 +182,26 @@ class SecureAnthropicClient:
             for tool_use in tool_uses:
                 if tool_executor:
                     try:
-                        result = tool_executor(
-                            tool_use.name,
-                            json.loads(tool_use.input) if isinstance(tool_use.input, str) else tool_use.input
-                        )
+                        # Parse tool input safely
+                        tool_input = tool_use.input
+                        if isinstance(tool_input, str):
+                            # Validate JSON before parsing
+                            if not tool_input.strip():
+                                raise ValueError("Empty tool input")
+                            tool_input = json.loads(tool_input)
+                        
+                        result = tool_executor(tool_use.name, tool_input)
                         tool_results.append({
                             "type": "tool_result",
                             "tool_use_id": tool_use.id,
                             "content": json.dumps(result, indent=2)
+                        })
+                    except json.JSONDecodeError as e:
+                        tool_results.append({
+                            "type": "tool_result",
+                            "tool_use_id": tool_use.id,
+                            "content": json.dumps({"error": f"Invalid JSON in tool input: {str(e)}"}),
+                            "is_error": True
                         })
                     except Exception as e:
                         tool_results.append({

@@ -22,7 +22,7 @@ def test_encryption_config():
     
     # Test default config
     config = EncryptionConfig()
-    assert config.enabled == False, "Default should be disabled"
+    assert config.enabled is False, "Default should be disabled"
     assert config.aws_region == "us-east-1", "Default region should be us-east-1"
     print("✅ Default encryption config correct")
     
@@ -32,7 +32,7 @@ def test_encryption_config():
     os.environ["AWS_REGION"] = "us-west-2"
     
     config = EncryptionConfig.from_env()
-    assert config.enabled == True, "Should be enabled from env"
+    assert config.enabled is True, "Should be enabled from env"
     assert config.kms_key_id == "test-key", "Should load KMS key from env"
     assert config.aws_region == "us-west-2", "Should load region from env"
     print("✅ Encryption config loaded from environment")
@@ -56,7 +56,7 @@ def test_encryption_manager_disabled():
     test_data = "sensitive schematic data"
     encrypted = manager.encrypt_data(test_data)
     
-    assert encrypted["encrypted"] == False, "Should not be encrypted when disabled"
+    assert encrypted["encrypted"] is False, "Should not be encrypted when disabled"
     assert encrypted["plaintext"] == test_data, "Should return plaintext when disabled"
     print("✅ Encryption manager correctly bypasses when disabled")
     
