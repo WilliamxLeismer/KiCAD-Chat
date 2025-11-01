@@ -56,6 +56,59 @@ echo "How many capacitors are there?" | python kicad_chat.py schematic.kicad_sch
 - **LLM**: OpenAI GPT-4 with function calling
 - **Interface**: Rich CLI with Markdown output
 
+## 🔒 Security Framework
+
+KiCAD-Chat includes a comprehensive security framework for protecting sensitive electronic design data:
+
+### Key Features
+- **Multi-Provider Support**: Choose between OpenAI and Anthropic Claude APIs
+- **Client-Side Encryption**: Encrypt design data using AWS KMS before transmission
+- **Zero Data Retention**: Support for Anthropic's Enterprise DPA with 24-hour data deletion
+- **PII Sanitization**: Automatic removal of personally identifiable information
+- **Audit Logging**: Track all API interactions for compliance
+- **VPC/PrivateLink**: Route traffic through private networks
+
+### Quick Security Setup
+
+1. **Choose AI Provider**:
+   ```bash
+   # Option 1: Use Anthropic Claude (recommended for sensitive designs)
+   AI_PROVIDER=anthropic
+   ANTHROPIC_API_KEY=your_key
+   
+   # Option 2: Use OpenAI (default)
+   AI_PROVIDER=openai
+   OPENAI_API_KEY=your_key
+   ```
+
+2. **Enable Encryption** (optional but recommended):
+   ```bash
+   ENABLE_ENCRYPTION=true
+   AWS_KMS_KEY_ID=alias/my-design-key
+   AWS_REGION=us-east-1
+   ```
+
+3. **Validate Configuration**:
+   ```bash
+   python examples/security_example.py
+   ```
+
+### Protected Assets
+- Schematic netlists, BOMs, Gerber files, ODB++
+- Design constraints, PDN notes, stack-up specs
+- Customer PII in comments
+
+For detailed security documentation, see [SECURITY.md](SECURITY.md).
+
+### Security Examples
+```bash
+# Generate security report
+python examples/security_example.py
+
+# Run security tests
+python tests/test_security.py
+```
+
 ## 🤝 Contributing
 
 This is a minimal MVP - contributions welcome! Areas for improvement:
@@ -63,7 +116,8 @@ This is a minimal MVP - contributions welcome! Areas for improvement:
 - Support for hierarchical sheets
 - Visual diagram generation
 - Performance optimizations
-- Chat with your PCB
+- Additional AI provider integrations
+- Advanced encryption schemes
 
 ## 📄 License
 
