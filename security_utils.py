@@ -201,10 +201,18 @@ def validate_security_configuration() -> Dict[str, Any]:
     # Check for PrivateLink
     if provider == "anthropic":
         endpoint = os.getenv("ANTHROPIC_ENDPOINT", "https://api.anthropic.com")
-        if "api.anthropic.com" in endpoint:
-            results["recommendations"].append(
-                "Consider using AWS PrivateLink for Anthropic API (set ANTHROPIC_ENDPOINT)"
-            )
+        # More secure URL comparison - check the netloc part specifically
+        from urllib.parse import urlparse
+        try:
+            parsed = urlparse(endpoint)
+            # Check if using default public endpoint
+            if parsed.netloc == "api.anthropic.com":
+                results["recommendations"].append(
+                    "Consider using AWS PrivateLink for Anthropic API (set ANTHROPIC_ENDPOINT)"
+                )
+        except Exception:
+            # If URL parsing fails, just skip the recommendation
+            pass
     
     return results
 
